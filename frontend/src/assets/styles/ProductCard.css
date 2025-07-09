@@ -1,0 +1,19 @@
+.product-card{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    /* align-items: center; */
+    text-align: center;
+    width: 300px;
+}
+
+.product-image{
+    width: 100%;
+    cursor: pointer;
+    /* height: 300px; */
+}
+
+.card-button{
+    display: flex;
+}

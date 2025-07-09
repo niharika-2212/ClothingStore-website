@@ -1,0 +1,8 @@
+.cart-item-card{
+    display: flex;
+    background-color: #dddddd;
+    padding: 20px;
+    justify-content: space-between;
+    width: 300px;;
+    align-items: center;
+}

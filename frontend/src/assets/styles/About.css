@@ -1,0 +1,25 @@
+.about{
+    display: flex;
+    flex-direction: column;
+}
+
+.about-1, .about-3, .about-2{
+    display: flex;
+    padding: 2rem ;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+}
+
+.about-2{
+    background-color: #dddddd;
+}
+
+.about-1-content{
+    width: 500px;
+}
+
+.about-image{
+    width: 300px;
+    height: 300px;
+}

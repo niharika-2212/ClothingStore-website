@@ -1,0 +1,7 @@
+.shop {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 20px;
+}

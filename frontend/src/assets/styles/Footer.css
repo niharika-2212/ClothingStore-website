@@ -1,0 +1,32 @@
+.footer{
+    padding: 4rem 2rem;
+    background-color: #AFC8AD;
+    display: flex;
+    justify-content: space-around;
+    /* align-items: center; */
+}
+
+.footer-links{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-links div{
+    cursor: pointer;
+}
+
+.footer-heading{
+    font-size: 18px;
+}
+
+.footer-icons{
+    display: flex;
+    gap: 20px;
+    cursor: pointer;
+}
+
+.footer-icon{
+    height: 24px;
+    width: 24px;
+}
