@@ -17,6 +17,7 @@
     "firebase-admin": "^13.4.0",
     "firebase-config": "^1.0.0",
     "mongodb": "^6.17.0",
-    "mongoose": "^8.16.2"
+    "mongoose": "^8.16.2",
+    "razorpay": "^2.9.6"
   }
 }

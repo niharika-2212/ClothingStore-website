@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../assets/styles/Login.css";
 import { auth } from "../firebase.js"; // Importing auth from firebase.js
 import { createUserWithEmailAndPassword } from "firebase/auth";
-
+import axios from "axios";
 function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
@@ -17,17 +17,31 @@ function Register() {
       navigate("/register");
     } else {
       try {
+        // create in firebaes
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
         const user = userCredential.user;
-        console.log("User registered:", user);
+        // console.log("User registered:", user);
         const token = await user.getIdToken();
-        console.log("Token:", token);
+        // Send token to backend to register user in MongoDB
+        const response = await axios.post(
+          "http://localhost:5000/auth/register",     // URL
+          { name: "" },                              // Body
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,      // ✅ must be in 3rd arg
+            },
+          }
+        );
+
         navigate("/");
-      } catch (error) {}
+      } catch (error) {
+        console.error("Firebase registration error:", error);
+        alert(error.message);
+      }
     }
   };
   return (

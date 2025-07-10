@@ -1,25 +1,54 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import "../assets/styles/Product.css";
-import image from "../assets/about.png"
+import image from "../assets/about.png";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 function Product() {
+    const navigate = useNavigate();
+    const { id } = useParams();
+    const { user } = useUser();
+    const [product, setProduct] = useState(null);
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const res = await axios.get(`http://localhost:5000/products/get/${id}`);
+                setProduct(res.data);
+            } catch (err) {
+                console.error("Error fetching product:", err);
+            }
+        };
+
+        fetchProduct();
+    }, [id]);
+    const handleCart = async (e) => {
+        if (user) {
+            navigate("/cart");
+        } else {
+            navigate("/login");
+        }
+    }
+
+    if (!product) return <div>Loading...</div>;
     return (
         <div className="product">
             <div className="product-content">
                 <img src={image} alt="product-image" className="item-image" />
                 <div className="product-details">
-                    <h1>product name</h1>
+                    <h1>{product.name}</h1>
                     <div>
                         <div>description: </div>
                         <div>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Earum nam excepturi repudiandae asperiores tempora esse quisquam porro optio reiciendis.
+                            {product.description}
                         </div>
                     </div>
                     <div>Quantity</div>
-                <div>Size</div>
-                <div>price</div>
-                <div className="button cart">Add to cart</div>
+                    <div>Size</div>
+                    <div>₹{product.price}</div>
+                    <div className="button cart" onClick={handleCart}>Add to cart</div>
+                </div>
             </div>
-        </div>
         </div >
     )
 }

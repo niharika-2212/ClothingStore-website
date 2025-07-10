@@ -23,5 +23,7 @@
     flex-direction: column;
     gap: 20px;
     width: 400px;
+    justify-content: center;
+    height: fit-content;
 }
 
