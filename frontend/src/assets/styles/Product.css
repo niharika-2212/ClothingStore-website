@@ -26,4 +26,31 @@
     justify-content: center;
     height: fit-content;
 }
+.size-section, .quantity-section{
+    display: flex;
+    gap: 20px;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.size-section select, option{
+    font-size: inherit;
+    font-family: inherit;
+    border: none;
+    padding: 10px;
+    outline: none;
+    cursor: pointer;
+}
+
+.quantity-section input{
+    width: 50px;
+}
+
+.quantity-section, button{
+    font-size: inherit;
+    font-family: inherit;
+    padding: 10px;
+    background-color: white;
+    cursor: pointer;
+}
 

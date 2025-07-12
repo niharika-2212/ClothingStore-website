@@ -6,16 +6,23 @@ import image from "../assets/about.png";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { auth } from "../firebase";
+
 function Product() {
     const navigate = useNavigate();
     const { id } = useParams();
     const { user } = useUser();
     const [product, setProduct] = useState(null);
+    const [selectedSize, setSelectedSize] = useState(""); // <-- Size selection
+    const [quantity, setQuantity] = useState(1);           // <-- Quantity selection
+
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const res = await axios.get(`http://localhost:5000/products/get/${id}`);
                 setProduct(res.data);
+                if (res.data.sizes && res.data.sizes.length > 0) {
+                    setSelectedSize(res.data.sizes[0]); // default size
+                }
             } catch (err) {
                 console.error("Error fetching product:", err);
             }
@@ -24,19 +31,20 @@ function Product() {
         fetchProduct();
     }, [id]);
 
-    const handleCart = async (e) => {
+    const handleCart = async () => {
         if (!user) return navigate("/login");
         try {
             const firebaseUser = auth.currentUser;
             if (!firebaseUser) throw new Error("User not authenticated");
 
             const token = await firebaseUser.getIdToken();
+
             const res = await axios.post(
                 "http://localhost:5000/cart/add",
                 {
                     productId: product._id,
-                    quantity: 1, // you can make it dynamic 
-                    size: "M",   // assume default or selected
+                    quantity,
+                    size: selectedSize,
                 },
                 {
                     headers: {
@@ -51,29 +59,70 @@ function Product() {
             console.error("Error adding to cart", err);
             alert("Failed to add to cart.");
         }
-    }
+    };
+
+    const increaseQty = () => {
+        if (quantity < product.quantity) {
+            setQuantity(prev => prev + 1);
+        }
+    };
+
+    const decreaseQty = () => {
+        if (quantity > 1) {
+            setQuantity(prev => prev - 1);
+        }
+    };
 
     if (!product) return <div>Loading...</div>;
+
     return (
         <div className="product">
             <div className="product-content">
-                <img src={image} alt="product-image" className="item-image" />
+                <img src={image} alt="product" className="item-image" />
                 <div className="product-details">
                     <h1>{product.name}</h1>
                     <div>
-                        <div>description: </div>
-                        <div>
-                            {product.description}
+                        <div>Description:</div>
+                        <div>{product.description}</div>
+                    </div>
+
+                    {/* Quantity Input */}
+                    <div className="quantity-section">
+                        <label>Quantity:</label>
+                        <div className="quantity-controls">
+                            <button onClick={decreaseQty}>-</button>
+                            <input
+                                type="number"
+                                value={quantity}
+                                readOnly
+                            />
+                            <button onClick={increaseQty}>+</button>
                         </div>
                     </div>
-                    <div>Quantity</div>
-                    <div>Size</div>
-                    <div>₹{product.price}</div>
-                    <div className="button cart" onClick={handleCart}>Add to cart</div>
+
+                    {/* Size Selector */}
+                    <div className="size-section">
+                        <label htmlFor="size">Size:</label>
+                        <select
+                            id="size"
+                            value={selectedSize}
+                            onChange={(e) => setSelectedSize(e.target.value)}
+                        >
+                            {product.size?.map(size => (
+                                <option key={size} value={size}>{size}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="price">₹{product.price}</div>
+
+                    <div className="button cart" onClick={handleCart}>
+                        Add to cart
+                    </div>
                 </div>
             </div>
-        </div >
-    )
+        </div>
+    );
 }
 
 export default Product;
