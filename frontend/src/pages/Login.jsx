@@ -1,39 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.js";
 import "../assets/styles/Login.css";
-import { useState } from "react";
 import { useUser } from "../context/UserContext";
+
 function Login() {
-  const { setUser } = useUser();
+  const { setUserAndToken } = useUser(); // ✅ updated
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const handlelogin = async (e) => {
+
+  const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
+      // Firebase login
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const token = await userCredential.user.getIdToken();
+      const firebaseUser = userCredential.user;
+      const token = await firebaseUser.getIdToken();
+
+      // Backend login (fetch full user from DB)
       const res = await axios.get("http://localhost:5000/auth/login", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setUser(res.data.user);
 
-      // console.log("Login success", res.data);
-      navigate("/"); // redirect to home page
-    } catch (error) {
-      console.error("Firebase login error:", error);
-      setError("Invalid credentials or user not registered.");
+      const dbUser = res.data.user;
+
+      // ✅ Save user + token in context and localStorage
+      setUserAndToken(dbUser, token);
+
+      // ✅ Redirect to home
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Invalid email or password, or user not registered.");
     }
-  }
+  };
   return (
     <div className="login">
-      <form className="login-form" onSubmit={handlelogin}>
+      <form className="login-form" onSubmit={handleLogin}>
         <h1>Login</h1>
         <div className="login-group">
           <label>Email</label>

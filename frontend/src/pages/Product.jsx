@@ -5,6 +5,7 @@ import "../assets/styles/Product.css";
 import image from "../assets/about.png";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { auth } from "../firebase";
 function Product() {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -22,11 +23,33 @@ function Product() {
 
         fetchProduct();
     }, [id]);
+
     const handleCart = async (e) => {
-        if (user) {
-            navigate("/cart");
-        } else {
-            navigate("/login");
+        if (!user) return navigate("/login");
+        try {
+            const firebaseUser = auth.currentUser;
+            if (!firebaseUser) throw new Error("User not authenticated");
+
+            const token = await firebaseUser.getIdToken();
+            const res = await axios.post(
+                "http://localhost:5000/cart/add",
+                {
+                    productId: product._id,
+                    quantity: 1, // you can make it dynamic 
+                    size: "M",   // assume default or selected
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log("Cart updated:", res.data);
+            alert("Item added to cart!");
+        } catch (err) {
+            console.error("Error adding to cart", err);
+            alert("Failed to add to cart.");
         }
     }
 

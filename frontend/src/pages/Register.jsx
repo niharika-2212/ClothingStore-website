@@ -1,47 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/Login.css";
-import { auth } from "../firebase.js"; // Importing auth from firebase.js
+import { auth } from "../firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import axios from "axios";
+import { useUser } from "../context/UserContext";
+
 function Register() {
   const navigate = useNavigate();
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPassword, setConfirmPassword] = React.useState("");
+  const { setUserAndToken } = useUser(); // ✅ pull from context
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (password != confirmPassword) {
-      alert("Passwords do not match");
-      navigate("/register");
-    } else {
-      try {
-        // create in firebaes
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const user = userCredential.user;
-        // console.log("User registered:", user);
-        const token = await user.getIdToken();
-        // Send token to backend to register user in MongoDB
-        const response = await axios.post(
-          "http://localhost:5000/auth/register",     // URL
-          { name: "" },                              // Body
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,      // ✅ must be in 3rd arg
-            },
-          }
-        );
 
-        navigate("/");
-      } catch (error) {
-        console.error("Firebase registration error:", error);
-        alert(error.message);
-      }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    try {
+      // ✅ Firebase signup
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseUser = userCredential.user;
+      const token = await firebaseUser.getIdToken();
+
+      // ✅ Backend registration
+      const res = await axios.post(
+        "http://localhost:5000/auth/register",
+        { name: "" }, // optionally collect name input later
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const dbUser = res.data.user;
+      setUserAndToken(dbUser, token); // ✅ store both user + token
+
+      navigate("/");
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Error registering user.");
     }
   };
   return (

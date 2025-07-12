@@ -12,6 +12,7 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Orderconfirm from './pages/Orderconfirm.jsx';
 import Cart from './pages/Cart.jsx';
+import Profile from './pages/Profile.jsx';
 function App() {
   return (
     <div className='app'>
@@ -27,7 +28,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/confirmed" element={<Orderconfirm />} />
           <Route path="/cart" element={<Cart />} />
-
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
         <Copyright />

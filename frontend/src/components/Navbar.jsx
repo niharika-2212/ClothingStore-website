@@ -7,14 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
+
+
 function Navbar() {
     const navigate = useNavigate();
-    const { user, setUser } = useUser();
+    const { user, logout } = useUser();
     const handleLogout = async () => {
         try {
             await signOut(auth); // Firebase logout
-            setUser(null); // Clear user from context
-            navigate("/login"); // Redirect to login
+            logout();            // Clear from context and localStorage
+            navigate("/login");  // Redirect to login
         } catch (err) {
             console.error("Logout failed:", err);
         }
@@ -24,7 +26,7 @@ function Navbar() {
             <div className="logo">Logo</div>
             <Navbar2 />
             <div className="navbar-right">
-                <FaRegUserCircle className="navbar-icon" />
+                <FaRegUserCircle className="navbar-icon" onClick={()=> {navigate("/profile")}} />
                 <IoCart className="navbar-icon" onClick={() => { navigate("/cart") }} />
                 {user ? (
                     <div className="button" onClick={handleLogout}>Logout</div>
