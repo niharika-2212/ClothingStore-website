@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { auth } from "../firebase.js";
 import axios from "axios";
+import "../assets/styles/Profile.css"
 import { useNavigate } from "react-router-dom";
 function Profile() {
     const [profile, setProfile] = useState(null);
@@ -33,17 +33,47 @@ function Profile() {
     if (!profile) return <div>Loading...</div>;
     return (
         <div className="profile">
-            <h1>User details</h1>
-            <div className="button">Edit</div>
+            <div className="profile-header">
+                <h1>User details</h1>
+                <div className="button edit-button" onClick={() => { navigate("/edit") }}>Edit</div>
+            </div>
             <div className="profile-details">
-                <div>Name: {profile.name || "Not set"}</div>
-                <div>Email: {profile.email} </div>
-                <div>Phone: {profile.phone || "Not set"}</div>
-                <div>Address: {profile.address || "Not set"}</div>
-                <div>City: {profile.city || "Not set"}</div>
-                <div>State: {profile.state || "Not set"}</div>
-                <div>Country: {profile.country || "Not set"}</div>
-                <div>Pincode: {profile.pincode || "Not set"}</div>
+                <table className="details">
+                    <tbody className="detail">
+                        <tr className="row">
+                            <td>Name:</td>
+                            <td>{profile.name || "Not set"}</td>
+                        </tr>
+                        <tr>
+                            <td>Email:</td>
+                            <td>{profile.email}</td>
+                        </tr>
+                        <tr>
+                            <td>Phone: </td>
+                            <td>{profile.phone || "Not set"}</td>
+                        </tr>
+                        <tr>
+                            <td>Address: </td>
+                            <td>{profile.address || "Not set"}</td>
+                        </tr>
+                        <tr>
+                            <td>City: </td>
+                            <td>{profile.city || "Not set"}</td>
+                        </tr>
+                        <tr>
+                            <td>State: </td>
+                            <td>{profile.state || "Not set"}</td>
+                        </tr>
+                        <tr>
+                            <td>Country: </td>
+                            <td>{profile.country || "Not set"}</td>
+                        </tr>
+                        <tr>
+                            <td>Pincode: </td>
+                            <td>{profile.pincode || "Not set"}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     )

@@ -13,6 +13,8 @@ import Register from './pages/Register.jsx';
 import Orderconfirm from './pages/Orderconfirm.jsx';
 import Cart from './pages/Cart.jsx';
 import Profile from './pages/Profile.jsx';
+import Edit from './pages/Edit.jsx';
+import PrivateRoute from './PrivateRoutes.jsx';
 function App() {
   return (
     <div className='app'>
@@ -26,9 +28,11 @@ function App() {
           <Route path="/product/:id" element={<Product />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/confirmed" element={<Orderconfirm />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/profile" element={<Profile />} />
+
+          <Route path="/confirmed" element={<PrivateRoute><Orderconfirm /></PrivateRoute>} />
+          <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+          <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+          <Route path="/edit" element={<PrivateRoute><Edit /></PrivateRoute>} />
         </Routes>
         <Footer />
         <Copyright />

@@ -1,0 +1,36 @@
+.profile{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap:40px;
+    padding: 20px;
+    /* padding: 50px 20px; */
+    align-items: center;
+    /* justify-content: center; */
+}
+
+.profile-header{
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+}
+
+.profile-details{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.detail td{ 
+    /* background-color: bisque; */
+    /* padding-bottom: 10px;
+    padding-right: 20px; */
+    padding: 10px;
+}

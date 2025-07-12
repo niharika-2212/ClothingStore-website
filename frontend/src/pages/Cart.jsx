@@ -74,6 +74,15 @@ function Cart() {
                 },
               }
             );
+            await axios.post(
+              "http://localhost:5000/orders/place-order",
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
             alert("Payment successful!");
             navigate("/confirmed");

@@ -42,7 +42,7 @@ function Register() {
       const dbUser = res.data.user;
       setUserAndToken(dbUser, token); // ✅ store both user + token
 
-      navigate("/");
+      navigate("/edit");
     } catch (err) {
       console.error("Registration error:", err);
       alert("Error registering user.");
